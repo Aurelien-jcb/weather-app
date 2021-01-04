@@ -1,38 +1,95 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
 .App {
+  background: no-repeat url('https://images.unsplash.com/photo-1513002749550-c59d786b8e6c?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=634&q=80');
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+/* Global Container */
+.weather__app {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  height: 80vh;
+  width: 80%;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+
+/* Input */
+.weather__input {
+  padding: 10px;
+  outline: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Border */
+.weather__input,
+.weather__current,
+.weather__card {
+  border-radius: 5px;
+  border: none;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Current Weather */
+.weather__current {
+  width: 220px;
+  padding: 30px;
+  margin-top: 60px;
+  background: rgba(255, 255, 255, 0.404);
+}
+
+/* Current Text */
+.weather__city {
+  text-align: left;
+}
+.weather__description {
+  text-transform: capitalize;
+}
+
+/* Bottom Container */
+.weather__prevision {
   display: flex;
-  flex-direction: column;
+  justify-content: space-around;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+/* Daily Cards */
+.weather__card {
+  text-transform: capitalize;
+  font-size: 14px;
+  width: auto;
+  height: 50px;
+  padding: 20px;
+  margin-top: 10px;
+  background: rgba(255, 255, 255, 0.404);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+@media screen and (min-width: 500px) {
+  .weather__current {
+    width: 515px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 244px;
   }
-  to {
-    transform: rotate(360deg);
+
+  .weather__prevision {
+    position: relative;
+    bottom: 50px;
+  }
+
+  .--firstday,
+  .--secondday,
+  .--thirdday {
+    margin-right: 20px;
   }
 }

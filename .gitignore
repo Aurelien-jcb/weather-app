@@ -1,5 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
+# trash
+/App-2.js
+/App-js3.js
+/test.js
 # dependencies
 /node_modules
 /.pnp
