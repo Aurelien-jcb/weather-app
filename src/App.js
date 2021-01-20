@@ -1,76 +1,58 @@
-import React, { Component } from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.css';
+import axios from 'axios';
+import SearchForm from './SearchForm';
 import TodayWeather from './TodayWeather';
 import OtherdayWeather from './OtherdayWeather';
-import axios from 'axios';
 
-export default class App extends Component {
-  state= {
-    data: "",
-    city: "",
-    newCity: "Nice",
-    urlCity: `https://api.openweathermap.org/data/2.5/onecall?lat=43.7009358&lon=7.2683912&units=metric&lang=fr&exclude=minutely,hourly,alerts&appid=312ad7879c1c0ae1d97ae55fa8241758`
-  }
-  componentDidMount(){
-    const url = `https://nominatim.openstreetmap.org/search/${this.state.newCity}?format=json&limit=1`;
-    console.log(url);
-    axios.get(url)
-      .then(res => {
-        this.setState({
-          data: res.data[0],
-          lat: res.data[0].lat,
-          lon: res.data[0].lon,
-        })
-      })
-  }
-  
-  getCity = (event) => {
-    event.preventDefault();
-    this.setState({
-      city : event.target.value
-    });
-    const temp = this.state.city;
-    this.setState({newCity: temp});
-    const url = `https://nominatim.openstreetmap.org/search/${this.state.city}?format=json&limit=1`;
-    axios.get(url)
-    .then(res => {
-      this.setState({
-        data: res.data[0],
-        lat: res.data[0].lat,
-        lon: res.data[0].lon,
-      })
-    })
-    this.setState({
-      urlCity: `https://api.openweathermap.org/data/2.5/onecall?lat=${this.state.data[0].lat}&lon=${this.state.data[0].lon}&units=metric&lang=fr&exclude=minutely,hourly,alerts&appid=312ad7879c1c0ae1d97ae55fa8241758`,
-      city: ""
-    });
+export default function App() {
 
-  }
-  
-  updateCity = (event) => {
-    this.setState({city: event.target.value});     
-  }
+    const [weather, setWeather] = useState();
+    const [currentWeather, setCurrentWeather] = useState();
+    const [city, setCity] = useState('');
+    const [newCity, setNewCity] = useState('Lens');
+    const [data, setData] = useState();
+    const [urlCity, setUrlCity] = useState();
+    const [urlWeather, setUrlWeather] = useState();
 
-  render() {
-    if (this.state.data) {
-      const lat = this.state.lat;
-      const lon = this.state.lon;  
-      return (
+    // useEffect(() => {
+    //   axios.get('http://api.openweathermap.org/data/2.5/weather?q=lens&appid=ef6e6acf960b100b476d9774b9ac20a3')
+    //   .then(res => {
+    //     setData(res.data);
+    //   })
+    //   axios.get('https://api.openweathermap.org/data/2.5/onecall?lat=50.4167&lon=2.8333&units=metric&lang=fr&exclude=minutely,hourly,alerts&appid=ef6e6acf960b100b476d9774b9ac20a3')
+    //   .then(res => {
+    //     setWeather(res.data.daily);
+    //     setCurrentWeather(res.data.current);
+    //   })
+    // });
+    const api_call = async e => {
+      e.preventDefault();
+      setUrlCity(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=ef6e6acf960b100b476d9774b9ac20a3`)
+      console.log(urlCity);
+      axios.get(urlCity).then(response => {
+        setData(response.data);
+      });
+      console.log(urlWeather);
+      setUrlWeather(`https://api.openweathermap.org/data/2.5/onecall?lat=${data.coord.lat}&lon=${data.coord.lon}&units=metric&lang=fr&exclude=minutely,hourly,alerts&appid=ef6e6acf960b100b476d9774b9ac20a3`)
+      setNewCity(city);
+      axios.get(urlWeather).then(response => {
+        setWeather(response.data.daily);
+        setCurrentWeather(response.data.current);
+      });
+      setCity('');
+    }
+
+    function updateCity(event) {
+      setCity(event.target.value);
+    }
+    return (
       <div className="App">
         <div className="weather__app">
-          <div className="weather__container">
-            <form onSubmit={this.getCity}>
-              <input onChange={this.updateCity} value={this.state.city} required className="weather__input" type="text" name="city" id="city" placeholder="Entrez votre ville"/>
-            </form>
-            <TodayWeather city={this.state.newCity} url={this.state.urlCity} lat={lat} lon={lon}/>
-
-            <OtherdayWeather data={this.state.data}/>
-          </div>
+          <SearchForm api_call={api_call} city={city} updateCity={updateCity}/>
+          { currentWeather && <TodayWeather weather={currentWeather} city={newCity}/>}
+          { weather && <OtherdayWeather weather={weather} />}
         </div>
-      </div>)}
-      else {
-        return (<p>Loading...</p>);
-      } 
-
-  }
+    </div>
+    )
 }
